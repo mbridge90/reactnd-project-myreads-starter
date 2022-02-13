@@ -1,39 +1,14 @@
 import Bookshelf from "./Bookshelf";
 import React from "react";
-import * as BooksAPI from "./BooksAPI";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 class ListBooks extends React.Component {
-  state = {
-    books: [],
-  }
 
   componentDidMount() {
-    this.getBooks()
+    this.props.getBooks()
   }
 
-  getBooks() {
-    BooksAPI.getAll()
-      .then((books) => {
-        this.setState({
-          books: books
-        })
-      })
-  }
-
-  // This function is called when moving books around the shelves rather than re-querying the API
-  // after the call to update the individual book listing.
-  updateLocalBooks(id, newShelf) {
-    let books = [...this.state.books]
-    for (let book of books) {
-      if (book.id === id) {
-        book['shelf'] = newShelf;
-        this.setState({
-          books: books
-        })
-      }
-    }
-  }
 
   render() {
     const shelfKeys = {
@@ -41,6 +16,8 @@ class ListBooks extends React.Component {
       "wantToRead": "Want to Read",
       "read": "Read"
     }
+
+    const { books, updateLocalShelves } = this.props
 
     return (
         <div className="list-books">
@@ -54,8 +31,8 @@ class ListBooks extends React.Component {
                     <Bookshelf
                       key={key}
                       shelfName={shelfKeys[key]}
-                      books={this.state.books.filter((book) => book["shelf"] === key)}
-                      updateLocalShelves={this.updateLocalBooks.bind(this)}
+                      books={books.filter((book) => book["shelf"] === key)}
+                      updateLocalShelves={updateLocalShelves}
                     />
                   )
               )}
@@ -67,6 +44,11 @@ class ListBooks extends React.Component {
         </div>
     )
   }
+}
+
+ListBooks.propTypes ={
+  getBooks: PropTypes.func.isRequired,
+  books: PropTypes.array.isRequired
 }
 
 export default ListBooks;

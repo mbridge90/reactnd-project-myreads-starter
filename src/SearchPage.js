@@ -3,15 +3,25 @@ import './App.css'
 import BooksGrid from "./BooksGrid";
 import * as BooksAPI from "./BooksAPI";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 class SearchPage extends React.Component {
   state = {
     searchResults: [],
   }
 
-  updateSearchResults (books) {
+  updateSearchResults (results) {
+    const { books } = this.props
+    let modifiedSearchResults = results
+    for (let result of modifiedSearchResults) {
+      for (let book of books) {
+        if (result['id'] === book['id']) {
+          result['shelf'] = book['shelf']
+        }
+      }
+    }
     this.setState({
-      searchResults: books
+      searchResults: modifiedSearchResults
     })
   }
 
@@ -48,11 +58,19 @@ class SearchPage extends React.Component {
           </div>
           <div className="search-books-results">
             {this.state.searchResults.length > 0 ?
-                <BooksGrid books={this.state.searchResults}/> : <p>No results found matching your search</p>}
+                <BooksGrid
+                    books={this.state.searchResults}
+                    updateLocalShelves={this.props.updateLocalShelves}
+                /> : <p>No results found matching your search</p>}
           </div>
         </div>
     )
   }
+}
+
+SearchPage.propTypes = {
+  books: PropTypes.array,
+  updateLocalShelves: PropTypes.func
 }
 
 export default SearchPage;
