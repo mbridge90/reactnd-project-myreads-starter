@@ -1,6 +1,7 @@
 import React from 'react'
 import './App.css'
 import * as BooksAPI from "./BooksAPI";
+import PropTypes from "prop-types";
 
 class Book extends React.Component {
   state = {
@@ -13,8 +14,7 @@ class Book extends React.Component {
     this.setState({
       currentShelf: e.target.value
     }, () => {
-      // updateLocalShelves only passed as prop to <Book /> when <BookGrid /> has been rendered by <Bookshelf />.
-      updateLocalShelves && updateLocalShelves(id, this.state.currentShelf);
+      updateLocalShelves(id, this.state.currentShelf);
       this.updateBook(id, this.state.currentShelf);
     });
   }
@@ -26,13 +26,15 @@ class Book extends React.Component {
   }
 
   render () {
+    const { cover, title, authors } = this.props
+
     return (
       <div className="book">
         <div className="book-top">
           <div className="book-cover" style={{
             width: 128,
             height: 193,
-            backgroundImage: `url(${this.props.cover})`
+            backgroundImage: `url(${cover})`
           }
           }/>
           <div className="book-shelf-changer">
@@ -45,11 +47,20 @@ class Book extends React.Component {
             </select>
           </div>
         </div>
-        <div className="book-title">{this.props.title}</div>
-        <div className="book-authors">{this.props.author}</div>
+        <div className="book-title">{title}</div>
+        <div className="book-authors">{authors}</div>
       </div>
     )
   }
+}
+
+Book.propTypes = {
+  cover: PropTypes.string,
+  title: PropTypes.string,
+  authors: PropTypes.string,
+  id: PropTypes.string,
+  updateLocalShelves: PropTypes.func,
+  currentShelf: PropTypes.string
 }
 
 export default Book;

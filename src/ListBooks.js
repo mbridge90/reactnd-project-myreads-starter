@@ -1,38 +1,12 @@
 import Bookshelf from "./Bookshelf";
 import React from "react";
-import * as BooksAPI from "./BooksAPI";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 class ListBooks extends React.Component {
-  state = {
-    books: [],
-  }
 
   componentDidMount() {
-    this.getBooks()
-  }
-
-  getBooks() {
-    BooksAPI.getAll()
-      .then((books) => {
-        this.setState({
-          books: books
-        })
-      })
-  }
-
-  // This function is called when moving books around the shelves rather than re-querying the API
-  // after the call to update the individual book listing.
-  updateLocalBooks(id, newShelf) {
-    let books = [...this.state.books]
-    for (let book of books) {
-      if (book.id === id) {
-        book['shelf'] = newShelf;
-        this.setState({
-          books: books
-        })
-      }
-    }
+    this.props.getBooks()
   }
 
   render() {
@@ -42,31 +16,38 @@ class ListBooks extends React.Component {
       "read": "Read"
     }
 
+    const { books, updateLocalShelves } = this.props
+
     return (
-        <div className="list-books">
-          <div className="list-books-title">
-            <h1>MyReads</h1>
-          </div>
-          <div className="list-books-content">
-            <div>
-              {Object.keys(shelfKeys).map(
-                  (key) => (
-                    <Bookshelf
-                      key={key}
-                      shelfName={shelfKeys[key]}
-                      books={this.state.books.filter((book) => book["shelf"] === key)}
-                      updateLocalShelves={this.updateLocalBooks.bind(this)}
-                    />
-                  )
-              )}
-            </div>
-          </div>
-          <Link to='/search' className="open-search">
-            <button>Add a book</button>
-          </Link>
+      <div className="list-books">
+        <div className="list-books-title">
+          <h1>MyReads</h1>
         </div>
+        <div className="list-books-content">
+          <div>
+            {Object.keys(shelfKeys).map(
+              (key) => (
+                <Bookshelf
+                  key={key}
+                  shelfName={shelfKeys[key]}
+                  books={books.filter((book) => book["shelf"] === key)}
+                  updateLocalShelves={updateLocalShelves}
+                />
+              )
+            )}
+          </div>
+        </div>
+        <Link to='/search' className="open-search">
+          <button>Add a book</button>
+        </Link>
+      </div>
     )
   }
+}
+
+ListBooks.propTypes ={
+  getBooks: PropTypes.func.isRequired,
+  books: PropTypes.array.isRequired
 }
 
 export default ListBooks;
