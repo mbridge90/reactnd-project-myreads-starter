@@ -5,7 +5,6 @@ import SearchPage from "./SearchPage"
  import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
  import * as BooksAPI from "./BooksAPI";
 
-
  class BooksApp extends React.Component {
    state = {
      books: [],
@@ -40,15 +39,15 @@ import SearchPage from "./SearchPage"
         <Routes>
           <Route exact path='/' element={
             <ListBooks
-                getBooks={this.getBooks.bind(this)}
-                updateLocalShelves={this.updateLocalShelves.bind(this)}
-                books={this.state.books}
+              getBooks={this.getBooks.bind(this)}
+              updateLocalShelves={this.updateLocalShelves.bind(this)}
+              books={this.state.books}
             />}
           />
           <Route path='/search' element={
             <SearchPage
-                books={this.state.books}
-                updateLocalShelves={this.updateLocalShelves.bind(this)}
+              books={this.state.books}
+              updateLocalShelves={this.updateLocalShelves.bind(this)}
             />}
           />
         </Routes>
