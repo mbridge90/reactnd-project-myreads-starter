@@ -4,12 +4,13 @@ import Book from "./Book";
 import PropTypes from 'prop-types';
 
 function BooksGrid ({ books, updateLocalShelves }) {
+  console.log("BooksGrid", books)
   return (
     <ol className="books-grid">
       {books.map((book) =>
         <li key={book.id}>
           <Book
-            id={book.id || 0}
+            id={book.id}
             shelf={book.shelf}
             title={book.title}
             cover={book['imageLinks']?.['thumbnail']}

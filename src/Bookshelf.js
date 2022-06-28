@@ -4,6 +4,8 @@ import BooksGrid from "./BooksGrid";
 import PropTypes from "prop-types";
 
 function Bookshelf (props) {
+  console.log("Bookshelf", props.books)
+
   return (
     <div className="bookshelf">
       <h2 className="bookshelf-title">{props.shelfName}</h2>

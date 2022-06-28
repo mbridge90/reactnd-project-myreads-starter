@@ -5,15 +5,16 @@ import PropTypes from "prop-types";
 
 function Book (props) {
   const{ updateLocalShelves, id, cover, title, authors, shelf } = props
+
   const [currentShelf, setCurrentShelf] = useState(shelf || "none")
 
-  useEffect(() => {
-    updateLocalShelves(id, currentShelf);
-    updateBook(id, currentShelf);
-  }, [id, currentShelf])
-
   const handleUpdate = (e) => {
-    setCurrentShelf(e.target.value)
+    console.log("currentShelf before calling setCurrentShelf", currentShelf);
+    console.log("target value", e.target.value)
+    setCurrentShelf(e.target.value);
+    console.log("currentShelf after calling setCurrentShelf", currentShelf);
+    updateLocalShelves(id, e.target.value);
+    updateBook(id, e.target.value);
   }
 
   const updateBook = (id, newShelf) => {

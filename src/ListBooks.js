@@ -3,9 +3,13 @@ import React, {useEffect} from "react";
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 
-function ListBooks ({ books, updateLocalShelves, getBooks }) {
+function ListBooks (props) {
 
-  useEffect(() => { getBooks() })
+  const { books, updateLocalShelves, getBooks } = props
+
+  useEffect(() => { getBooks() }, [])
+
+  console.log("In ListBooks", books);
 
   const shelfKeys = {
     "currentlyReading": "Currently Reading",
