@@ -18,15 +18,19 @@ function SearchPage ({ books, updateLocalShelves }) {
   const [searchResults, setSearchResults] = useState([])
 
   const updateSearchResults = (results) => {
-    let modifiedSearchResults = results
-    for (let result of modifiedSearchResults) {
-      for (let book of books) {
-        if (result['id'] === book['id']) {
-          result['shelf'] = book['shelf']
+    if (results.length > 0) {
+      let modifiedSearchResults = results
+      for (let result of modifiedSearchResults) {
+        for (let book of books) {
+          if (result['id'] === book['id']) {
+            result['shelf'] = book['shelf']
+          }
         }
       }
+      setSearchResults(modifiedSearchResults)
+    } else {
+      setSearchResults([])
     }
-    setSearchResults(modifiedSearchResults)
   }
 
   const handleSearch =  debounce(query => {
