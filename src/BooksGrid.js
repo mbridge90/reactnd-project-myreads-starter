@@ -4,7 +4,6 @@ import Book from "./Book";
 import PropTypes from 'prop-types';
 
 function BooksGrid ({ books, updateLocalShelves }) {
-  console.log("BooksGrid", books)
   return (
     <ol className="books-grid">
       {books.map((book) =>

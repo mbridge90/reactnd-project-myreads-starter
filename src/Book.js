@@ -9,10 +9,7 @@ function Book (props) {
   const [currentShelf, setCurrentShelf] = useState(shelf || "none")
 
   const handleUpdate = (e) => {
-    console.log("currentShelf before calling setCurrentShelf", currentShelf);
-    console.log("target value", e.target.value)
     setCurrentShelf(e.target.value);
-    console.log("currentShelf after calling setCurrentShelf", currentShelf);
     updateLocalShelves(id, e.target.value);
     updateBook(id, e.target.value);
   }
