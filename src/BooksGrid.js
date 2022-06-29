@@ -3,7 +3,7 @@ import './App.css'
 import Book from "./Book";
 import PropTypes from 'prop-types';
 
-function BooksGrid ({ books, updateLocalShelves}) {
+function BooksGrid ({ books, updateLocalShelves }) {
   return (
     <ol className="books-grid">
       {books.map((book) =>

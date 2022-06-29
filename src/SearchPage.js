@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import './App.css'
 import BooksGrid from "./BooksGrid";
 import * as BooksAPI from "./BooksAPI";
@@ -13,38 +13,38 @@ const debounce = (callback, delay) => {
   }
 }
 
-class SearchPage extends React.Component {
-  state = {
-    searchResults: [],
-  }
+function SearchPage ({ books, updateLocalShelves }) {
 
-  updateSearchResults (results) {
-    const { books } = this.props
-    let modifiedSearchResults = results
-    for (let result of modifiedSearchResults) {
-      for (let book of books) {
-        if (result['id'] === book['id']) {
-          result['shelf'] = book['shelf']
+  const [searchResults, setSearchResults] = useState([])
+
+  const updateSearchResults = (results) => {
+    if (results.length > 0) {
+      let modifiedSearchResults = results
+      for (let result of modifiedSearchResults) {
+        for (let book of books) {
+          if (result['id'] === book['id']) {
+            result['shelf'] = book['shelf']
+          }
         }
       }
+      setSearchResults(modifiedSearchResults)
+    } else {
+      setSearchResults([])
     }
-    this.setState({
-      searchResults: modifiedSearchResults
-    })
   }
 
-  handleSearch =  debounce(query => {
+  const handleSearch =  debounce(query => {
     if (query) {
       BooksAPI.search(query)
         .then((results) => {
-          this.updateSearchResults(results)
+          updateSearchResults(results)
         })
     } else {
-      this.updateSearchResults([])
+      updateSearchResults([])
     }
   }, 250)
 
-  render () {
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -61,19 +61,19 @@ class SearchPage extends React.Component {
                 you don't find a specific author or title. Every search is limited by search terms.
               */}
             <input type="text" placeholder="Search by title or author"
-                   onChange={(event) => this.handleSearch(event.target.value)}/>
+                   onChange={(event) => handleSearch(event.target.value)}/>
           </div>
         </div>
         <div className="search-books-results">
-          {this.state.searchResults.length > 0 ?
+          {searchResults.length > 0 ?
             <BooksGrid
-              books={this.state.searchResults}
-              updateLocalShelves={this.props.updateLocalShelves}
+              books={searchResults}
+              updateLocalShelves={updateLocalShelves}
             /> : <p>No results found matching your search</p>}
         </div>
       </div>
     )
-  }
+
 }
 
 SearchPage.propTypes = {

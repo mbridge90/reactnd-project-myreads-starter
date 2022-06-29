@@ -1,59 +1,51 @@
- import React from 'react'
+ import React, {useState} from 'react'
 import './App.css'
 import ListBooks from "./ListBooks"
 import SearchPage from "./SearchPage"
  import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
  import * as BooksAPI from "./BooksAPI";
 
- class BooksApp extends React.Component {
-   state = {
-     books: [],
-   }
+ function BooksApp () {
+   const [books, setBooks] = useState([])
 
-   getBooks() {
+   const getBooks = () => {
      BooksAPI.getAll()
        .then((books) => {
-         this.setState({
-           books: books
-         })
+         setBooks(books);
        })
    }
 
    // This function is called when moving books around the shelves rather than re-querying the API
    // after the call to update the individual book listing.
-   updateLocalShelves(id, newShelf) {
-     let books = [...this.state.books]
-     for (let book of books) {
+   const updateLocalShelves = (id, newShelf) => {
+     let updatedBooks = [...books]
+     for (let book of updatedBooks) {
        if (book.id === id) {
          book['shelf'] = newShelf;
-         this.setState({
-           books: books
-         })
+         setBooks(updatedBooks)
        }
      }
    }
 
-   render() {
-    return (
-      <Router>
-        <Routes>
-          <Route exact path='/' element={
-            <ListBooks
-              getBooks={this.getBooks.bind(this)}
-              updateLocalShelves={this.updateLocalShelves.bind(this)}
-              books={this.state.books}
-            />}
-          />
-          <Route path='/search' element={
-            <SearchPage
-              books={this.state.books}
-              updateLocalShelves={this.updateLocalShelves.bind(this)}
-            />}
-          />
-        </Routes>
-      </Router>
-    )
-  }
+  return (
+    <Router>
+      <Routes>
+        <Route exact path='/' element={
+          <ListBooks
+            getBooks={getBooks}
+            updateLocalShelves={updateLocalShelves}
+            books={books}
+          />}
+        />
+        <Route path='/search' element={
+          <SearchPage
+            books={books}
+            updateLocalShelves={updateLocalShelves}
+          />}
+        />
+      </Routes>
+    </Router>
+  )
 }
 
 export default BooksApp
